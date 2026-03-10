@@ -7,7 +7,7 @@ names=(Jennifer Michael Amanda Christopher Jessica Jason Melissa David Sarah Jam
 apple=(MacBook-Pro MacBook-Air MacBook iMac iMac-Pro Mac-mini Mac-Studio iPhone iPhone-Pro iPhone-Pro-Max)
 android=(android Pixel Galaxy Galaxy-S Galaxy-Note OnePlus Redmi)
 
-case $((RANDOM%4)) in
+case $((RANDOM%3)) in
 0)
   d=${apple[RANDOM%${#apple[@]}]}
   if ((RANDOM%2)); then
@@ -45,7 +45,8 @@ sudo macchanger -r "$interface" | grep -v "unknown"
 sudo ip link set dev "$interface" up
 
 echo -e "\nNew hostname: $newname"
-echo "New MAC: $(ip link show "$interface" | awk '/link\/ether/ {print $2}')"
-echo -e "New IP: $(local_ip)\n"
+echo -e "New MAC: $(ip link show "$interface" | awk '/link\/ether/ {print $2}')\n"
 
-ping -c 4 -W 4 cloudflare.com
+ping -c 1 -W 4 cloudflare.com
+
+echo -e "\nNew IP: $(local_ip)"
