@@ -29,8 +29,7 @@ esac
 }
 
 newname="$(randname)"
-interface=$(ip route get 8.8.8.8 | awk '{print $5; exit}')
-
+interface=$(ip -o link show up | awk -F': ' '/BROADCAST/ {print $2}')
 local_ip() { ip -4 addr show "$interface" | awk '/inet / {print $2}' | cut -d/ -f1; }
 
 echo "Current IP: $(local_ip)"
