@@ -21,7 +21,7 @@ case $((RANDOM%3)) in
     else echo "LAPTOP-$(r 7)";
   fi
 ;;
-3)
+2)
   a=${android[RANDOM%${#android[@]}]}
   echo "$a-$((RANDOM%100))"
 ;;
