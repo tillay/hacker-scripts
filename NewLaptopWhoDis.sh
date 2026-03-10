@@ -33,17 +33,20 @@ interface=$(ip -o link show up | awk -F': ' '/BROADCAST/ {print $2}')
 local_ip() { ip -4 addr show "$interface" | awk '/inet / {print $2}' | cut -d/ -f1; }
 
 echo "Current IP: $(local_ip)"
+echo "Current MAC: $(ip link show "$interface" | awk '/link\/ether/ {print $2}')"
 
 sudo ip link set dev "$interface" down
 
 sudo hostnamectl set-hostname "$newname" --static
-echo "Set hostname to $newname!"
+echo "Set hostname to $newname"
 
-sudo macchanger -r "$interface"
+sudo macchanger -r "$interface" | sed 's/.\{12\}$//'
 
 sudo ip link set dev "$interface" up
 
 echo "New IP: $(local_ip)"
+
+sleep 4
 
 ping -c 4 -W 4 1.1.1.1
 
