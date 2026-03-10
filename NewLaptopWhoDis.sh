@@ -11,7 +11,7 @@ case $((RANDOM%4)) in
 0)
   d=${apple[RANDOM%${#apple[@]}]}
   if ((RANDOM%2)); then
-    echo "${names[RANDOM%${#names[@]}]}'s-$d";
+    echo "${names[RANDOM%${#names[@]}]}s-$d";
     else echo "$d";
   fi
 ;;
