@@ -40,14 +40,12 @@ sudo ip link set dev "$interface" down
 sudo hostnamectl set-hostname "$newname" --static
 echo "Set hostname to $newname"
 
-sudo macchanger -r "$interface" | sed 's/.\{12\}$//'
+sudo macchanger -r "$interface" | grep New | sed 's/.\{1\}$//'
 
 sudo ip link set dev "$interface" up
 
 echo "New IP: $(local_ip)"
 
 sleep 4
-
-ping -c 4 -W 4 1.1.1.1
 
 ping -c 4 -W 4 cloudflare.com
