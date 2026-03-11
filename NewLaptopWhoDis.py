@@ -24,7 +24,6 @@ def generate_device_name():
   apple_devices = ["MacBook-Pro", "MacBook-Air", "MacBook", "iMac", "iMac-Pro", "Mac-mini", "Mac-Studio", "iPhone", "iPhone-Pro", "iPhone-Pro-Max"]
   samsung_devices = ["Galaxy-S24", "Galaxy-S23", "Galaxy-S22", "Galaxy-A54", "Galaxy-A34", "Galaxy-Z-Fold5", "Galaxy-Z-Flip5", "Galaxy-Note20"]
   google_devices = ["Pixel-8", "Pixel-8-Pro", "Pixel-7", "Pixel-7-Pro", "Pixel-7a", "Pixel-6", "Pixel-6a", "Pixel-Fold"]
-  xaomi_devices = ["Redmi-Note-13", "Redmi-12", "Xiaomi-14", "Xiaomi-13", "POCO-X6", "POCO-F5", "Mi-11", "Mi-13"]
 
   rand_device_type = random.randrange(3)
 
@@ -36,17 +35,12 @@ def generate_device_name():
     prefix = random.choice(["DESKTOP", "LAPTOP"])
     return f"{prefix}-{random_string(7)}", "windows"
 
-  rand_phone_type = random.randrange(5)
+  rand_phone_type = random.randrange(3)
 
   if rand_phone_type == 0:
-    device = random.choice(samsung_devices)
-    return f"{device}-{random.randrange(100)}", "samsung"
+    return random.choice(samsung_devices), "samsung"
   elif rand_phone_type == 1:
-    device = random.choice(google_devices)
-    return f"{device}-{random.randrange(100)}", "google"
-  elif rand_phone_type == 2:
-    device = random.choice(xaomi_devices)
-    return f"{device}-{random.randrange(100)}", "xaomi"
+    return random.choice(google_devices), "google"
   else:
     return random_string(6) + "-" + random_string(6), ""
 
@@ -76,8 +70,6 @@ elif device_type == "windows":
   new_mac = generate_random_mac(["E4C767", "001109", "00040F", "000C87", "0003FF"])
 elif device_type == "google":
   new_mac = generate_random_mac(["34C7E9"])
-elif device_type == "xaomi":
-  new_mac = generate_random_mac(["9C99A0"])
 elif device_type == "samsung":
   new_mac = generate_random_mac(["ACEE9E"])
 else:
