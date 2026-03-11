@@ -38,9 +38,13 @@ def generate_device_name():
   rand_phone_type = random.randrange(3)
 
   if rand_phone_type == 0:
-    return random.choice(samsung_devices), "samsung"
+    device = random.choice(samsung_devices)
+    name = random.choice(names) + "s-" + device if random.randrange(2) else device
+    return name, "samsung"
   elif rand_phone_type == 1:
-    return random.choice(google_devices), "google"
+    device = random.choice(google_devices)
+    name = random.choice(names) + "s-" + device if random.randrange(2) else device
+    return name, "google"
   else:
     return random_string(6) + "-" + random_string(6), ""
 
