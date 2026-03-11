@@ -77,7 +77,7 @@ elif device_type == "google":
 elif device_type == "samsung":
   new_mac = generate_random_mac(["5001BB", "CC07AB", "8C7712", "9C0298", "F4428F", "3871DE", "784F43", "D81C4E", "B8BBAF", "FC039F", "8CCE4E", "A09144", "3C5A37", "5CE8EB", "B8D9CE"])
 else:
-  new_mac = generate_random_mac(''.join(random.choices('0123456789ABCDEF', k=6)))
+  new_mac = generate_random_mac(["DA91F2", "BE3A7C", "CA4D1E", "FA7B32", "2A5E9D", "3E8C14", "4AB267", "6A3F8E", "9EC451", "AE72B3"])
 
 run_sudo(f"sudo ip link set dev {interface_name} address {new_mac}")
 run_sudo(f"sudo ip link set dev {interface_name} up")
