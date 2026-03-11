@@ -65,13 +65,13 @@ run_sudo(f"sudo ip link set dev {interface_name} down")
 run_sudo(f"sudo hostnamectl set-hostname {device_name} --static")
 
 if device_type == "apple":
-  new_mac = generate_random_mac(["F0EE7A", "F02475", "F8278B", "DC2B61", "F82793", "A85C2C", "3C0754", "98FED1", "BC9FEF", "8C7B9D", "A4B197", "D0E140", "C82A14", "609AC1", "ACE4B5", "A88415", "54AE27", "70ECE4", "34C059", "80ED2C"])
+  new_mac = generate_random_mac(["F0EE7A", "F02475", "F82793", "DC2B61", "A85C2C", "BC9FEF", "C82A14", "ACE4B5", "A4B197", "D0E140", "8C7B9D", "80ED2C", "3C0754"])
 elif device_type == "windows":
   new_mac = generate_random_mac(["E4C767", "001109", "00040F", "000C87", "0003FF"])
 elif device_type == "google":
-  new_mac = generate_random_mac(["B8DB38", "FCF5C4", "D850E6", "AC37DB", "34AB37", "3C5AB4", "F4F5E8", "A4C494", "54EF44", "7CE9D3"])
+  new_mac = generate_random_mac(["3C5AB4", "F4F5E8", "F4F5D8", "546009", "94EB2C", "A47733", "1CF29A", "20DFB9", "D86C63", "B8DB38"])
 elif device_type == "samsung":
-  new_mac = generate_random_mac(["B8DB38", "FCF5C4", "D850E6", "AC37DB", "34AB37", "3C5AB4", "F4F5E8", "A4C494", "54EF44", "7CE9D3", "8CCE4E", "5001BB", "A09144", "F4428F", "CC07AB", "3871DE", "9C0298", "D81C4E", "784F43"])
+  new_mac = generate_random_mac(["5001BB", "CC07AB", "8C7712", "9C0298", "F4428F", "3871DE", "784F43", "D81C4E", "B8BBAF", "FC039F", "8CCE4E", "A09144", "3C5A37", "5CE8EB", "B8D9CE"])
 else:
   new_mac = generate_random_mac(''.join(random.choices('0123456789ABCDEF', k=6)))
 
