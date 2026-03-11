@@ -1,4 +1,4 @@
-import os, random, subprocess, string, time
+import random, subprocess, string
 
 def run(command):
   return subprocess.check_output(command, shell=True, text=True).strip()
@@ -81,7 +81,7 @@ elif device_type == "xaomi":
 elif device_type == "samsung":
   new_mac = generate_random_mac(["ACEE9E"])
 else:
-  new_mac = generate_random_mac([random_string(6)])
+  new_mac = generate_random_mac(''.join(random.choices('0123456789ABCDEF', k=6)))
 
 run_sudo(f"sudo ip link set dev {interface_name} address {new_mac}")
 run_sudo(f"sudo ip link set dev {interface_name} up")
