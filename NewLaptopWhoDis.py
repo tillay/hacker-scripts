@@ -22,7 +22,9 @@ def generate_random_mac(prefix_list):
 def generate_device_name():
   names = "Jennifer Michael Amanda Christopher Jessica Jason Melissa David Sarah James Heather Matthew Nicole Joshua Amy John Elizabeth Robert Michelle Joseph Kimberly Daniel Angela Brian Stephanie Justin Tiffany William Christina Ryan Lisa Eric Rebecca Nicholas Crystal Jeremy Kelly Andrew Erin Timothy Laura Jonathan Amber Adam Rachel Kevin Jamie Anthony Mary Thomas April Richard Sara Jeffrey Andrea Steven Shannon Charles Megan Brandon Emily Mark Julie Benjamin Danielle Scott Erica Aaron Katherine Paul Maria Nathan Kristin Travis Lauren Patrick Kristen Chad Ashley Stephen Christine Kenneth Brandy Gregory Tara Jacob Katie Dustin Monica Jesse Carrie Jose Alicia Shawn Courtney Sean Misty Bryan Kathryn Derek Patricia Bradley Holly Edward Stacy Donald Karen Samuel Anna Peter Tracy Keith Brooke Kyle Samantha Ronald Allison Juan Melanie George Leslie Jared Susan Douglas Brandi Gary Cynthia Erik Natalie Phillip Jill Raymond Dawn Joel Dana Corey Vanessa Shane Veronica Larry Lindsay Marcus Tina Zachary Kristina Craig Stacey Derrick Wendy Todd Lori Jeremiah".split()
   apple_devices = ["MacBook-Pro", "MacBook-Air", "MacBook", "iMac", "iMac-Pro", "Mac-mini", "Mac-Studio", "iPhone", "iPhone-Pro", "iPhone-Pro-Max"]
-  android_devices = ["android", "Pixel", "Galaxy", "Galaxy-S", "Galaxy-Note", "OnePlus", "Redmi"]
+  samsung_devices = ["Galaxy-S24", "Galaxy-S23", "Galaxy-S22", "Galaxy-A54", "Galaxy-A34", "Galaxy-Z-Fold5", "Galaxy-Z-Flip5", "Galaxy-Note20"]
+  google_devices = ["Pixel-8", "Pixel-8-Pro", "Pixel-7", "Pixel-7-Pro", "Pixel-7a", "Pixel-6", "Pixel-6a", "Pixel-Fold"]
+  xaomi_devices = ["Redmi-Note-13", "Redmi-12", "Xiaomi-14", "Xiaomi-13", "POCO-X6", "POCO-F5", "Mi-11", "Mi-13"]
 
   rand_device_type = random.randrange(3)
 
@@ -33,8 +35,20 @@ def generate_device_name():
   if rand_device_type == 1:
     prefix = random.choice(["DESKTOP", "LAPTOP"])
     return f"{prefix}-{random_string(7)}", "windows"
-  device = random.choice(android_devices)
-  return f"{device}-{random.randrange(100)}", "android"
+
+  rand_phone_type = random.randrange(5)
+
+  if rand_phone_type == 0:
+    device = random.choice(samsung_devices)
+    return f"{device}-{random.randrange(100)}", "samsung"
+  elif rand_phone_type == 1:
+    device = random.choice(google_devices)
+    return f"{device}-{random.randrange(100)}", "google"
+  elif rand_phone_type == 2:
+    device = random.choice(xaomi_devices)
+    return f"{device}-{random.randrange(100)}", "xaomi"
+  else:
+    return random_string(6) + "-" + random_string(6), ""
 
 def get_local_ip(iname):
   try:
@@ -60,8 +74,12 @@ if device_type == "apple":
   new_mac = generate_random_mac(["F0EE7A"])
 elif device_type == "windows":
   new_mac = generate_random_mac(["E4C767", "001109", "00040F", "000C87", "0003FF"])
-elif device_type == "android":
-  new_mac = generate_random_mac(["B8DB38", "FCF5C4", "D850E6", "AC37DB", "34AB37"])
+elif device_type == "google":
+  new_mac = generate_random_mac(["34C7E9"])
+elif device_type == "xaomi":
+  new_mac = generate_random_mac(["9C99A0"])
+elif device_type == "samsung":
+  new_mac = generate_random_mac(["ACEE9E"])
 else:
   new_mac = generate_random_mac([random_string(6)])
 
