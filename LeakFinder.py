@@ -71,3 +71,5 @@ while repo_url != "" and repo_url != "q":
             print(f"{a(33)}Github returned error: {user_repos["message"].lower()}{a(0)}")
     else:
         print(f"{a(33)}Not a github repo or @user!{a(0)}")
+
+    repo_url = input(f"\n{a(0)}Search github repo or @user: {a(96)}")
