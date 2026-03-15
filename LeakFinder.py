@@ -27,12 +27,16 @@ def run_analysis(repo_path, prev_authors):
         if int(return_headers.get("X-RateLimit-Remaining")) < 20:
             reset = datetime.fromtimestamp(int(return_headers.get('X-RateLimit-Reset')))
             print(
-                f"{a(36)}Ratelimit info: {a(33)}{return_headers.get('X-RateLimit-Remaining')}"
+                f"{a(36)}Ratelimit warning: {a(33)}{return_headers.get('X-RateLimit-Remaining')}"
                 f"{a(36)}/{a(32)}{return_headers.get('X-RateLimit-Limit')}{a(36)} "
                 f"requests remaining (reset at {a(37)}{reset:%H:%M:%S}{a(36)}){a(0)}"
             )
     else:
-        print(f"{a(33)}Github returned error: {history_json["message"].lower()}{a(0)}\n")
+        if "rate limit" in history_json["message"]:
+            print(f"{a(33)}Github rate limit exceeded!{a(0)}\n")
+            return None
+        else:
+            print(f"{a(33)}Github returned error: {history_json["message"].lower()}{a(0)}\n")
 
     return prev_authors
 
@@ -56,20 +60,23 @@ while repo_url != "" and repo_url != "q":
                 date = repo["created_at"].split("T")[0].replace("-", "/")
                 print(f"{a(0)}{i+1}. {a(color)}{repo["name"]}{a(0)} ({date})")
 
-            index = input(f"Choose index to search: {a(96)}")
-            if index == "scan":
-                print(f"{a(92)}Doing full scan for {a(96)}@{repo_url[1:]}{a(0)} ({len(user_repos)} repos):")
-                all_authors = [""]
-                for i, repo in enumerate(sorted_repos):
-                    if not user_repos[i]["fork"]:
-                        all_authors = run_analysis(user_repos[i]["full_name"], all_authors)
+            if len(user_repos) > 0:
+                index = input(f"{a(0)}Choose index to search: {a(96)}")
+                if index == "scan":
+                    print(f"{a(92)}Doing full scan for {a(96)}@{repo_url[1:]}{a(0)} ({len(user_repos)} repos):")
+                    all_authors = [""]
+                    for i, repo in enumerate(sorted_repos):
+                        if not all_authors is None and not user_repos[i]["fork"]:
+                            all_authors = run_analysis(user_repos[i]["full_name"], all_authors)
+                else:
+                    while index.isdigit() and int(index) <= len(user_repos):
+                        run_analysis(sorted_repos[int(index) - 1]["full_name"], [])
+                        index = input(f"Choose another index: {a(96)}")
             else:
-                while index.isdigit() and int(index) <= len(user_repos):
-                    run_analysis(sorted_repos[int(index) - 1]["full_name"], [])
-                    index = input(f"Choose another index: {a(96)}")
+                print(f"{a(33)}User {repo_url[1:]} has no repos!{a(0)}")
         else:
             print(f"{a(33)}Github returned error: {user_repos["message"].lower()}{a(0)}")
     else:
         print(f"{a(33)}Not a github repo or @user!{a(0)}")
 
-    repo_url = input(f"\n{a(0)}Search github repo or @user: {a(96)}")
+    repo_url = input(f"{a(0)}Search github repo or @user: {a(96)}")
