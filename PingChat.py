@@ -36,14 +36,14 @@ def handle_packet(source_ip, number, trigger):
 
     if ses["phase"] == "len":
         ses["planned_len"], ses["phase"] = number, "data"
-        print(f"\n{a(36)}incoming transmission from {a(35)}{source_ip}{a(0)}:")
+        print(f"\n{a(36)}Incoming transmission from {a(35)}{source_ip}{a(0)}:")
         print(end=f"{a(34)}>{a(0)} {rand_dots(number)}\033[{number}D", flush=True)
 
     elif ses["phase"] == "data":
         if len(ses["chars"]) == ses["planned_len"]:
             local_hash = make_checksum(ses["planned_len"], "".join(ses["chars"]))
             if number == local_hash:
-                print(f"\n{a(32)}reception complete!{a(0)}")
+                print(f"\n{a(32)}Reception complete!{a(0)}")
             else:
                 print(f"\n{a(31)}bad checksum: got {number}, expected {local_hash}{a(0)}")
             sessions.pop(source_ip)
@@ -51,7 +51,7 @@ def handle_packet(source_ip, number, trigger):
 
         try: ascii_val = int(str(number), 8)
         except ValueError:
-            print(f"\n{a(31)}invalid octal {number} from {source_ip}{a(0)}")
+            print(f"\n{a(31)}Invalid octal {number} from {source_ip}{a(0)}")
             sessions.pop(source_ip)
             return
 
@@ -64,7 +64,7 @@ if len(sys.argv) == 2 and sys.argv[1].isdigit():
         cmd = ["tcpdump", "-n", "-l", "icmp[icmptype] == icmp-echo"]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
     except FileNotFoundError:
-        print(f"{a(31)}tcpdump not found!{a(0)}")
+        print(f"{a(31)}tcpdump command not found!{a(0)}")
         exit(1)
 
     try:
@@ -80,19 +80,19 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
     if sys.argv[1].count(":") == 1:
         message, magic_number = sys.argv[2], sys.argv[1].split(":")[1]
         if not magic_number.isdigit() or int(magic_number) > 1024 or int(magic_number) <= 0:
-            print(f"{a(33)}invalid port: {magic_number} (needs int between 0 and 1024){a(0)}")
+            print(f"{a(33)}Invalid port: {magic_number} (needs int between 0 and 1024){a(0)}")
             exit(1)
     else:
-        print(f"please include port after ip like {target_ip}:{random.randint(1, 1024)}")
+        print(f"{a(33)}Please include port after ip like {target_ip}:{random.randint(1, 1024)}{a(0)}")
         exit(1)
 
     if len(message) == 0:
-        print(f"{a(33)}a message is required!{a(0)}")
+        print(f"{a(33)}A message is required!{a(0)}")
         exit(1)
 
     for char in message:
         if not 0 <= int(oct(ord(char))[2:]) < 178:
-            print(f"{a(33)}invalid character {char} ({int(oct(ord(char))[2:])}){a(0)}")
+            print(f"{a(33)}Invalid character {char} ({int(oct(ord(char))[2:])}){a(0)}")
             exit(1)
 
     planned_len = len(message)
@@ -112,7 +112,7 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
     print()
 
 else:
-    print(f"usage:\n"
+    print(f"Usage:\n"
           f"    python3 {sys.argv[0]} <ip>:<port> <message> - send message to server\n"
           f"    python3 {sys.argv[0]} <port> - set up listening server"
     )
