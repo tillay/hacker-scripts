@@ -45,7 +45,7 @@ def handle_packet(source_ip, number, trigger):
             if number == local_hash:
                 print(f"\n{a(32)}Reception complete!{a(0)}")
             else:
-                print(f"\n{a(31)}bad checksum: got {number}, expected {local_hash}{a(0)}")
+                print(f"\n{a(31)}Bad checksum: got {number}, expected {local_hash}{a(0)}")
             sessions.pop(source_ip)
             return
 
@@ -64,7 +64,7 @@ if len(sys.argv) == 2 and sys.argv[1].isdigit():
         cmd = ["tcpdump", "-n", "-l", "icmp[icmptype] == icmp-echo"]
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
     except FileNotFoundError:
-        print(f"{a(31)}tcpdump command not found!{a(0)}")
+        print(f"{a(31)}tcpdump not found!{a(0)}")
         exit(1)
 
     try:
