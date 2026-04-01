@@ -68,19 +68,19 @@ if len(sys.argv) == 2 and sys.argv[1].isdigit():
         exit(1)
 
     try:
-        magic_number = int(sys.argv[1])
+        port = int(sys.argv[1])
         for line in proc.stdout:
             sender, data = parse_line(line.strip())
-            if data: handle_packet(sender, data, magic_number)
+            if data: handle_packet(sender, data, port)
 
     except KeyboardInterrupt: proc.terminate()
 
 elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
     target_ip = sys.argv[1].split(":")[0]
     if sys.argv[1].count(":") == 1:
-        message, magic_number = sys.argv[2], sys.argv[1].split(":")[1]
-        if not magic_number.isdigit() or int(magic_number) > 1024 or int(magic_number) <= 0:
-            print(f"{a(33)}Invalid port: {magic_number} (needs int between 0 and 1024){a(0)}")
+        message, port = sys.argv[2], sys.argv[1].split(":")[1]
+        if not port.isdigit() or int(port) > 1024 or int(port) <= 0:
+            print(f"{a(33)}Invalid port: {port} (needs int between 0 and 1024){a(0)}")
             exit(1)
     else:
         print(f"{a(33)}Please include port after ip like {target_ip}:{random.randint(1, 1024)}{a(0)}")
@@ -96,7 +96,7 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
             exit(1)
 
     planned_len = len(message)
-    sequence = [magic_number, planned_len] + [int(oct(ord(c))[2:]) for c in message] + [make_checksum(planned_len, message)]
+    sequence = [port, planned_len] + [int(oct(ord(c))[2:]) for c in message] + [make_checksum(planned_len, message)]
 
     processes = []
     for num in sequence:
