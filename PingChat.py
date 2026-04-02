@@ -1,6 +1,6 @@
 import subprocess, re, hashlib, random, ipaddress, time, sys
 
-passkey = "yes good safe password yes"
+passkey = "password"
 max_packet_size = 1024
 packet_interval = 0.05
 sessions = {}
@@ -17,7 +17,7 @@ def make_checksum(str1, str2):
 
 def rand_dots(length):
     dots = ""
-    for i in range(length):
+    for dot in range(length):
         dots += chr(random.randint(0x2800, 0x28FF))
     return dots
 
