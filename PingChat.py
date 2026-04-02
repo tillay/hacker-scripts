@@ -42,7 +42,7 @@ def cypher(n): return (n & ~0xFF) | sub_table[n & 0xFF]
 
 def handle_packet(source_ip, number, trigger):
     if number == trigger:
-        sessions[source_ip] = {"phase": "len", "chars": []}
+        sessions[source_ip] = {'phase': 'len', 'chars': []}
         return
 
     if not source_ip in sessions:
@@ -50,18 +50,18 @@ def handle_packet(source_ip, number, trigger):
 
     ses = sessions[source_ip]
 
-    if ses["phase"] == "len":
-        ses["len"], ses["phase"] = cypher(number), "data"
+    if ses['phase'] == 'len':
+        ses['len'], ses['phase'] = cypher(number), "data"
         print(f"\n{an(36)}Incoming transmission from {an(35)}{source_ip}{an(0)}:")
-        print(end=f"{an(34)}>{an(0)} {rand_dots(ses["len"])}\033[{ses["len"]}D", flush=True)
+        print(end=f"{an(34)}>{an(0)} {rand_dots(ses['len'])}\033[{ses['len']}D", flush=True)
 
-    elif ses["phase"] == "data":
-        if len(ses["chars"]) == ses["len"]:
-            local_hash = make_checksum(ses["len"], "".join(ses["chars"]))
+    elif ses['phase'] == "data":
+        if len(ses['chars']) == ses['len']:
+            local_hash = make_checksum(ses['len'], "".join(ses['chars']))
             if number == local_hash:
                 print(f"\n{an(32)}Reception complete!{an(0)}")
             else:
-                print(f"\n{an(31)}Bad checksum: got {cypher(number)}, expected {local_hash}{an(0)}")
+                print(f"\n{an(31)}Bad checksum: got {number}, expected {local_hash}{an(0)}")
             sessions.pop(source_ip)
             return
 
@@ -71,7 +71,7 @@ def handle_packet(source_ip, number, trigger):
             sessions.pop(source_ip)
             return
 
-        ses["chars"].append(input_char)
+        ses['chars'].append(input_char)
         print(input_char, end="", flush=True)
 
 if len(sys.argv) == 2 and sys.argv[1].isdigit():
