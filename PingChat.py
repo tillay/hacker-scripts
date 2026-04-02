@@ -58,7 +58,7 @@ def handle_packet(source_ip, number, trigger):
     elif ses["phase"] == "data":
         if len(ses["chars"]) == ses["len"]:
             local_hash = make_checksum(ses["len"], "".join(ses["chars"]))
-            if cypher(number) == local_hash:
+            if number == local_hash:
                 print(f"\n{an(32)}Reception complete!{an(0)}")
             else:
                 print(f"\n{an(31)}Bad checksum: got {cypher(number)}, expected {local_hash}{an(0)}")
@@ -118,7 +118,7 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
     sequence = (
             [int(port) + max_packet_size, cypher(planned_len)] +
             [cypher(codec(c)) for c in message] +
-            [cypher(make_checksum(planned_len, message))]
+            [make_checksum(planned_len, message)]
     )
 
     processes = []
