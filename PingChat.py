@@ -105,7 +105,7 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
         print(f"{an(33)}A message is required!{an(0)}")
         exit(1)
 
-    if len(message) > max_packet_size / 8:
+    if len(message) >= 256:
         print(f"{an(33)}Message is too long!{an(0)}")
         exit(1)
 
@@ -137,5 +137,7 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
 else:
     print(f"Usage:\n"
           f"    python3 {sys.argv[0]} <ip>:<port> <message> - send message to server\n"
-          f"    python3 {sys.argv[0]} <port> - set up listening server"
+          f"    python3 {sys.argv[0]} <port> - set up listening server\n\n"
+          f"Modify the passkey instance variable to customize (still not secure)\n"
+          f"Modify the max_packet_size instance variable to increase number of usable characters and ports"
           )
