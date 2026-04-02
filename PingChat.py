@@ -36,6 +36,7 @@ random.shuffle(indices)
 for i in range(0, 256, 2):
     a, b = indices[i], indices[i+1]
     sub_table[a], sub_table[b] = sub_table[b], sub_table[a]
+random.seed()
 
 def cypher(n): return (n & ~0xFF) | sub_table[n & 0xFF]
 
@@ -50,17 +51,17 @@ def handle_packet(source_ip, number, trigger):
     ses = sessions[source_ip]
 
     if ses["phase"] == "len":
-        ses["planned_len"], ses["phase"] = number, "data"
+        ses["len"], ses["phase"] = cypher(number), "data"
         print(f"\n{an(36)}Incoming transmission from {an(35)}{source_ip}{an(0)}:")
-        print(end=f"{an(34)}>{an(0)} {rand_dots(number)}\033[{number}D", flush=True)
+        print(end=f"{an(34)}>{an(0)} {rand_dots(ses["len"])}\033[{ses["len"]}D", flush=True)
 
     elif ses["phase"] == "data":
-        if len(ses["chars"]) == ses["planned_len"]:
-            local_hash = make_checksum(ses["planned_len"], "".join(ses["chars"]))
-            if number == local_hash:
+        if len(ses["chars"]) == ses["len"]:
+            local_hash = make_checksum(ses["len"], "".join(ses["chars"]))
+            if cypher(number) == local_hash:
                 print(f"\n{an(32)}Reception complete!{an(0)}")
             else:
-                print(f"\n{an(31)}Bad checksum: got {number}, expected {local_hash}{an(0)}")
+                print(f"\n{an(31)}Bad checksum: got {cypher(number)}, expected {local_hash}{an(0)}")
             sessions.pop(source_ip)
             return
 
@@ -115,9 +116,9 @@ elif len(sys.argv) == 3 and is_ip(sys.argv[1].split(":")[0]):
 
     planned_len = len(message)
     sequence = (
-            [int(port) + max_packet_size, planned_len] +
+            [int(port) + max_packet_size, cypher(planned_len)] +
             [cypher(codec(c)) for c in message] +
-            [make_checksum(planned_len, message)]
+            [cypher(make_checksum(planned_len, message))]
     )
 
     processes = []
