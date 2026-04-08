@@ -16,10 +16,26 @@ def run_analysis(repo_path, prev_authors):
             login = entry["author"]["login"] if entry["author"] else ""
             name = entry["commit"]["author"]["name"]
             email = entry["commit"]["author"]["email"]
-            author_string = login+name+email
+
+            tz_key, timezone = "", ""
+            if entry["commit"]["verification"]["verified"]:
+                signature = entry["commit"]["verification"]["payload"].split()
+                for j, v in enumerate(signature):
+                    if v == "committer" and tz_key == "":
+                        timezone, timestamp = signature[j-1], int(signature[j-2])
+                        day = datetime.fromtimestamp(timestamp).strftime("%Y/%m/%d")
+                        tz_key = timezone
+
+                        hours = "+0" if int(timezone[1:3]) == 0 else timezone[0:3].strip("0")
+                        minutes = "00" if timezone[3:5] == "0" else timezone[3:5]
+                        timezone = f"UTC{hours}:{minutes} ({day})"
+
+            author_string = " ".join([login, name, email, tz_key])
+
             if not author_string in prev_authors:
                 if login != "": print(f"{a(0)}GH Username: {a(94)}{login}")
-                print(f"{a(0)}Name: {a(91)}{name}\n{a(0)}Email: {a(92)}{email}{a(0)}\n")
+                print(f"{a(0)}Name: {a(91)}{name}\n{a(0)}Email: {a(92)}{email}{a(0)}")
+                print("" if timezone == "" else f"{a(0)}Timezone: {a(95)}{timezone}{a(0)}\n")
                 prev_authors.append(author_string)
 
         if len(history_json) == 100 and print_notes:
