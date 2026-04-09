@@ -52,7 +52,7 @@ def run_analysis(repo_path, prev_authors):
             print(f"{a(33)}Github rate limit exceeded!{a(0)}\n")
             return None
         else:
-            print(f"{a(33)}Github returned error: {history_json["message"].lower()}{a(0)}\n")
+            print(f"{a(33)}Github returned error: {history_json['message'].lower()}{a(0)}\n")
 
     return prev_authors
 
@@ -74,7 +74,7 @@ while repo_url != "" and repo_url != "q":
             for i, repo in enumerate(sorted_repos):
                 color = 93 if repo["fork"] else 95
                 date = repo["created_at"].split("T")[0].replace("-", "/")
-                print(f"{a(0)}{i+1}. {a(color)}{repo["name"]}{a(0)} ({date})")
+                print(f"{a(0)}{i+1}. {a(color)}{repo['name']}{a(0)} ({date})")
 
             if len(user_repos) > 0:
                 index = input(f"{a(0)}Choose index to search: {a(96)}")
@@ -91,7 +91,7 @@ while repo_url != "" and repo_url != "q":
             else:
                 print(f"{a(33)}User {repo_url[1:]} has no repos!{a(0)}")
         else:
-            print(f"{a(33)}Github returned error: {user_repos["message"].lower()}{a(0)}")
+            print(f"{a(33)}Github returned error: {user_repos['message'].lower()}{a(0)}")
     else:
         print(f"{a(33)}Not a github repo or @user!{a(0)}")
 
