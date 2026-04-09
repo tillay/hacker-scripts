@@ -23,12 +23,9 @@ def run_analysis(repo_path, prev_authors):
                 for j, v in enumerate(signature):
                     if v == "committer" and tz_key == "":
                         timezone, timestamp = signature[j-1], int(signature[j-2])
-                        day = datetime.fromtimestamp(timestamp).strftime("%Y/%m/%d")
+                        day = datetime.fromtimestamp(timestamp).strftime("%Y/%m/%d").replace("/0", "/")
                         tz_key = timezone
-
-                        hours = "+0" if int(timezone[1:3]) == 0 else timezone[0:3].strip("0")
-                        minutes = "00" if timezone[3:5] == "0" else timezone[3:5]
-                        timezone = f"UTC{hours}:{minutes} ({day})"
+                        timezone = f"UTC{timezone[0]}{str(int(timezone[1:3]))}:{timezone[3:5]} ({day})"
 
             author_string = " ".join([login, name, email, tz_key])
 
@@ -56,43 +53,45 @@ def run_analysis(repo_path, prev_authors):
 
     return prev_authors
 
-print(f"\n{a(4)}{a(31)}Github LeakFinder CLI super haxx0r Xtreme edition pro max\n{a(0)}")
+def main(repo_url):
+    while repo_url != "" and repo_url != "q":
+        if repo_url.startswith("https://github.com/") and repo_url.count("/") >= 4:
+            repo_url = repo_url.split("/")
+            repo_url = repo_url[3] + "/" + repo_url[4]
+            run_analysis(repo_url, [])
+        elif repo_url.count("/") == 1:
+            run_analysis(repo_url, [])
+        elif repo_url.startswith("@"):
+            user_repos = requests.get(f"https://api.github.com/users/{repo_url[1:]}/repos?per_page=100").json()
+            if isinstance(user_repos, list):
+                sorted_repos = sorted(user_repos, key=lambda r: r["created_at"])
+                for i, repo in enumerate(sorted_repos):
+                    color = 93 if repo["fork"] else 95
+                    date = repo["created_at"].split("T")[0].replace("-", "/")
+                    print(f"{a(0)}{i+1}. {a(color)}{repo['name']}{a(0)} ({date})")
 
-repo_url = input(f"Search github repo or @user: {a(96)}")
-
-while repo_url != "" and repo_url != "q":
-    if repo_url.startswith("https://github.com/") and repo_url.count("/") >= 4:
-        repo_url = repo_url.split("/")
-        repo_url = repo_url[3] + "/" + repo_url[4]
-        run_analysis(repo_url, [])
-    elif repo_url.count("/") == 1:
-        run_analysis(repo_url, [])
-    elif repo_url.startswith("@"):
-        user_repos = requests.get(f"https://api.github.com/users/{repo_url[1:]}/repos?per_page=100").json()
-        if isinstance(user_repos, list):
-            sorted_repos = sorted(user_repos, key=lambda r: r["created_at"])
-            for i, repo in enumerate(sorted_repos):
-                color = 93 if repo["fork"] else 95
-                date = repo["created_at"].split("T")[0].replace("-", "/")
-                print(f"{a(0)}{i+1}. {a(color)}{repo['name']}{a(0)} ({date})")
-
-            if len(user_repos) > 0:
-                index = input(f"{a(0)}Choose index to search: {a(96)}")
-                if index == "scan":
-                    print(f"{a(92)}Doing full scan for {a(96)}@{repo_url[1:]}{a(0)} ({len(user_repos)} repos):")
-                    all_authors = [""]
-                    for i, repo in enumerate(sorted_repos):
-                        if not all_authors is None and not user_repos[i]["fork"]:
-                            all_authors = run_analysis(user_repos[i]["full_name"], all_authors)
+                if len(user_repos) > 0:
+                    index = input(f"{a(0)}Choose index to search: {a(96)}")
+                    if index == "scan":
+                        print(f"{a(92)}Doing full scan of {a(96)}@{repo_url[1:]}{a(0)} ({len(user_repos)} repos):")
+                        all_authors = [""]
+                        for i, repo in enumerate(sorted_repos):
+                            if not all_authors is None and not user_repos[i]["fork"]:
+                                all_authors = run_analysis(user_repos[i]["full_name"], all_authors)
+                    else:
+                        while index.isdigit() and int(index) <= len(user_repos):
+                            run_analysis(sorted_repos[int(index) - 1]["full_name"], [])
+                            index = input(f"Choose another index: {a(96)}")
                 else:
-                    while index.isdigit() and int(index) <= len(user_repos):
-                        run_analysis(sorted_repos[int(index) - 1]["full_name"], [])
-                        index = input(f"Choose another index: {a(96)}")
+                    print(f"{a(33)}User {repo_url[1:]} has no repos!{a(0)}")
             else:
-                print(f"{a(33)}User {repo_url[1:]} has no repos!{a(0)}")
+                print(f"{a(33)}Github returned error: {user_repos['message'].lower()}{a(0)}")
         else:
-            print(f"{a(33)}Github returned error: {user_repos['message'].lower()}{a(0)}")
-    else:
-        print(f"{a(33)}Not a github repo or @user!{a(0)}")
+            print(f"{a(33)}Not a github repo or @user!{a(0)}")
 
-    repo_url = input(f"{a(0)}Search github repo or @user: {a(96)}")
+        repo_url = input(f"{a(0)}Search github repo or @user: {a(96)}")
+
+if __name__ == "__main__":
+    print(f"\n{a(4)}{a(31)}Github LeakFinder CLI super haxx0r Xtreme edition pro max\n{a(0)}")
+    try: main(input(f"Search github repo or @user: {a(96)}"))
+    except KeyboardInterrupt: print()
